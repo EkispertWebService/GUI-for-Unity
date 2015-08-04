@@ -19,7 +19,7 @@
  1. Unityのプロジェクトを新規作成します
  2. Assets以下をプロジェクトにコピーします
  3. Assets/Scenes/EkispertWebService.unityを開きます
- 4. Hierarchyの中から「EkispertWebServiceSample」を選択します
+ 4. Hierarchyの中から「EkispertWebService」を選択します
  5. Inspector内の「Ekispert Web Service (Script)」のURLとkeyを書き換えます
 
  * **URLの値**
