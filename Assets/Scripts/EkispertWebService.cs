@@ -10,8 +10,9 @@ public class EkispertWebService : MonoBehaviour
     public string URL;
     public string key;
 
-    // 取得した駅名リスト(インスペクターに表示)
-    public string[] stationList;
+    // 取得した情報のリスト
+    public string dataType;
+    public string[] resultList;
 
     // フラグ、メッセージなど
     public string message;
@@ -30,14 +31,24 @@ public class EkispertWebService : MonoBehaviour
 
     }
 
-    public void searchStation(string inputStaionText)
+    public void searchCorporation(string inputText)
     {
-        // 駅名の取得を押した際の処理
+        // 会社名の取得を押した際の処理
+        dataType = "Corporation";
         isSuccess = false;
         message = "";
-        if (inputStaionText.Length > 0)
+        StartCoroutine(getEkispert(inputText));
+    }
+
+    public void searchRail(string inputText)
+    {
+        // 路線名の取得を押した際の処理
+        dataType = "Rail";
+        isSuccess = false;
+        message = "";
+        if (inputText.Length > 0)
         {
-            StartCoroutine(getStation(inputStaionText));
+            StartCoroutine(getEkispert(inputText));
         }
         else
         {
@@ -46,10 +57,44 @@ public class EkispertWebService : MonoBehaviour
         }
     }
 
-    private IEnumerator getStation(string stationName)
+    public void searchStation(string inputText)
     {
-        // 駅名検索用URIの作成
-        string uri = URL + "xml/station/light?key=" + key + "&name=" + WWW.EscapeURL(stationName);
+        // 駅名の取得を押した際の処理
+        dataType = "Station";
+        isSuccess = false;
+        message = "";
+        if (inputText.Length > 0)
+        {
+            StartCoroutine(getEkispert(inputText));
+        }
+        else
+        {
+            isSuccess = true;
+            message = "1文字以上指定してください。";
+        }
+    }
+
+    // アクセス用の汎用処理
+    private IEnumerator getEkispert(string inputText)
+    {
+        // 検索用URIの作成
+        string uri = "";
+        if (dataType == "Corporation")
+        {
+            uri = URL + "xml/corporation?key=" + key;
+            if (inputText != "")
+            {
+                uri += "&name=" + WWW.EscapeURL(inputText);
+            }
+        }
+        else if (dataType == "Rail")
+        {
+            uri = URL + "xml/rail?key=" + key + "&name=" + WWW.EscapeURL(inputText);
+        }
+        else if (dataType == "Station")
+        {
+            uri = URL + "xml/station?key=" + key + "&name=" + WWW.EscapeURL(inputText);
+        }
 
         // Webサービスへの問い合わせ処理
         WWW www = new WWW(uri);
@@ -61,7 +106,7 @@ public class EkispertWebService : MonoBehaviour
             Debug.Log("Success");
 
             // 処理しやすいようにArrayListへ一時的に格納
-            ArrayList tmp_Station = new ArrayList();
+            ArrayList resultArray = new ArrayList();
 
             // Webサービスから取得したXMLの取得
             string xmlString = www.text;
@@ -70,49 +115,107 @@ public class EkispertWebService : MonoBehaviour
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(new StringReader(xmlString));
 
-            // 駅名が格納されている地点情報を検索
-            XmlNodeList pointList = xmlDoc.GetElementsByTagName("Point");
-
-            foreach (XmlNode point in pointList)
+            if (dataType == "Corporation")
             {
-                // 駅名と読み
-                string stationNameText = "";
-                string stationYomiText = "";
+                // 会社名が格納されている情報を検索
+                XmlNodeList corporationList = xmlDoc.GetElementsByTagName("Corporation");
 
-                // 地点に含まれる駅情報をNodeに分ける
-                foreach (XmlNode pointNode in point.ChildNodes)
+                // CorporationをNodeに分ける
+                foreach (XmlNode corporationNode in corporationList)
                 {
-                    // NameがStationの要素に駅名が格納されているので比較する
-                    if (pointNode.Name == "Station")
+                    // 会社の要素内のNodeを解析
+                    foreach (XmlNode corporation in corporationNode.ChildNodes)
                     {
-                        // 駅の要素内のNodeを解析
-                        foreach (XmlNode stationNode in pointNode.ChildNodes)
+                        // Name要素に実際の会社名が格納されている
+                        if (corporation.Name == "Name")
                         {
-                            // Name要素に実際の駅名が格納されている
-                            if (stationNode.Name == "Name")
-                            {
-                                // valueに駅名が入っているのでArrayListに格納
-                                stationNameText = stationNode.FirstChild.Value;
-                            }
-                            else if (stationNode.Name == "Yomi")
-                            {
-                                // valueに駅名が入っているのでArrayListに格納
-                                stationYomiText = stationNode.FirstChild.Value;
-                            }
+                            // valueに会社名が入っているのでArrayListに格納
+                            resultArray.Add(corporation.FirstChild.Value);
                         }
                     }
                 }
-                //データを格納
-                tmp_Station.Add(stationNameText + "," + stationYomiText);
             }
-            // ArrayListを配列に変換してインスペクターで見れるようにする
-            stationList = (string[])tmp_Station.ToArray(typeof(string));
-
-            // ヒットした駅名を確認
-            if (stationList.Length == 0)
+            else if (dataType == "Rail")
             {
-                // 0件の場合は該当する駅がないのでメッセージを表示する
-                message = "「" + stationName + "」に該当する駅が見つかりませんでした。";
+                // 路線名が格納されている情報を検索
+                XmlNodeList railList = xmlDoc.GetElementsByTagName("Line");
+
+                // LineをNodeに分ける
+                foreach (XmlNode railNode in railList)
+                {
+                    // 路線の要素内のNodeを解析
+                    foreach (XmlNode rail in railNode.ChildNodes)
+                    {
+                        // Name要素に実際の路線名が格納されている
+                        if (rail.Name == "Name")
+                        {
+                            // valueに路線名が入っているのでArrayListに格納
+                            resultArray.Add(rail.FirstChild.Value);
+                        }
+                    }
+                }
+            }
+            else if (dataType == "Station")
+            {
+                // 駅名が格納されている地点情報を検索
+                XmlNodeList pointList = xmlDoc.GetElementsByTagName("Point");
+
+                foreach (XmlNode point in pointList)
+                {
+                    // 駅名と読み
+                    string stationNameText = "";
+                    string stationYomiText = "";
+
+                    // 地点に含まれる駅情報をNodeに分ける
+                    foreach (XmlNode pointNode in point.ChildNodes)
+                    {
+                        // NameがStationの要素に駅名が格納されているので比較する
+                        if (pointNode.Name == "Station")
+                        {
+                            // 駅の要素内のNodeを解析
+                            foreach (XmlNode stationNode in pointNode.ChildNodes)
+                            {
+                                // Name要素に実際の駅名が格納されている
+                                if (stationNode.Name == "Name")
+                                {
+                                    // valueに駅名が入っているのでArrayListに格納
+                                    stationNameText = stationNode.FirstChild.Value;
+                                }
+                                else if (stationNode.Name == "Yomi")
+                                {
+                                    // valueに駅名が入っているのでArrayListに格納
+                                    stationYomiText = stationNode.FirstChild.Value;
+                                }
+                            }
+                        }
+                    }
+                    //データを格納
+                    resultArray.Add(stationNameText + "," + stationYomiText);
+                }
+            }
+
+            // ArrayListを配列に変換してインスペクターで見れるようにする
+            resultList = (string[])resultArray.ToArray(typeof(string));
+
+            // ヒットした情報を確認
+            if (resultList.Length == 0)
+            {
+                // 0件の場合は該当する情報がないのでメッセージを表示する
+                message = "「" + inputText + "」に該当する";
+                if (dataType == "Corporation")
+                {
+                    message += "会社名";
+                }
+                else if (dataType == "Rail")
+                {
+                    message += "路線名";
+                }
+                else if (dataType == "Station")
+                {
+                    message += "駅";
+                }
+
+                message += "が見つかりませんでした。";
             }
 
             // 処理が完了した際にtrueにする
