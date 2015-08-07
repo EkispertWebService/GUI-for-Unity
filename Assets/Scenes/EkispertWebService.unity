@@ -1170,7 +1170,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   URL: http://api.ekispert.com/v1/
   key: 
-  dataType: 
+  API: 0
+  Name: 
   resultList: []
   message: 
   isSuccess: 0
