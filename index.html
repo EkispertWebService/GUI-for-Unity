@@ -11,31 +11,39 @@
   </head>
   <body>
     <section class="page-header">
-      <h1 class="project-name">Gui-for-unity</h1>
-      <h2 class="project-tagline">駅すぱあとWebサービス・GUI for Unity</h2>
+      <h1 class="project-name">駅すぱあとWebサービス for Unity</h1>
+      <h2 class="project-tagline"></h2>
       <a href="https://github.com/EkispertWebService/GUI-for-Unity" class="btn">View on GitHub</a>
       <a href="https://github.com/EkispertWebService/GUI-for-Unity/zipball/master" class="btn">Download .zip</a>
       <a href="https://github.com/EkispertWebService/GUI-for-Unity/tarball/master" class="btn">Download .tar.gz</a>
     </section>
 
     <section class="main-content">
-      <h1>
-<a id="駅すぱあとwebサービス---guiソリューション-for-unity" class="anchor" href="#%E9%A7%85%E3%81%99%E3%81%B1%E3%81%82%E3%81%A8web%E3%82%B5%E3%83%BC%E3%83%93%E3%82%B9---gui%E3%82%BD%E3%83%AA%E3%83%A5%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3-for-unity" aria-hidden="true"><span class="octicon octicon-link"></span></a>駅すぱあとWebサービス - GUIソリューション for Unity</h1>
 
 <h2>
 <a id="更新履歴" class="anchor" href="#%%8dX%90V%97%9a%97%f0" aria-hidden="true"><span class="octicon octicon-link"></span></a>更新履歴</h2>
 
 <ul>
 <li>
-<p><strong>会社名と路線名の検索に対応しました</strong></p>
+<p><strong>サンプルゲームの「Nandoku」を追加しました。</strong></p>
 
-<p>会社名は名称(前方一致)を入力して「会社名の取得」を押すと一覧が表示されます。</p>
+<p>レベルを指定してください。</p>
+<p>駅名の読みを正しく入力すると次へ進みます。</p>
+<p>「ゃ」など、小さい文字は「や」で入力してください。</p>
+<p>「ば」などの濁音は「は」を選択した後「゛」を押してください。</p>
+<p>全ての駅を入力し終わるか、時間が切れると結果画面が表示されます。</p>
 
-<p>※会社名は文字を入力しなくても検索可能です。</p>
+<p><a target="_blank" href="sample/nandoku/WebGL/">WebGLを利用して開く</a>（Chrome/Safari/FireFox向け）</p>
 
-<p>路線名は名称(前方一致)を入力して「路線名の取得」を押すと一覧が表示されます。</p>
+<p><a target="_blank" href="sample/nandoku/WebPlayer.html">WebPlayerで開く</a>（Internet Explorer向け）</p>
 
-<p>※WebGL版は日本語入力未対応のため、WebPlayer版のみのデモとなっております。</p>
+<p>※スマートフォン/タブレット非推奨</p>
+
+<p>
+<img src="images/nandoku_1.png" title="タイトル" alt="タイトル" width="240" height="150">
+<img src="images/nandoku_2.png" title="ゲーム画面1" alt="ゲーム画面1" width="240" height="150">
+<img src="images/nandoku_3.png" title="ゲーム画面2" alt="ゲーム画面2" width="240" height="150">
+</p>
 
 </li>
 </ul>
@@ -54,6 +62,23 @@
 <p><a href="https://ekiworld.net/service/sier/webservice/free_provision.html">駅すぱあとWebサービス無償提供API</a></p>
 
 <p>また、後日、認証キーをメールにてお送りいたします。</p>
+</li>
+</ul>
+
+<h2>
+<a id="ご利用方法" class="anchor" href="#%E3%81%94%E5%88%A9%E7%94%A8%E6%96%B9%E6%B3%95" aria-hidden="true"><span class="octicon octicon-link"></span></a>ご利用方法</h2>
+
+<ul>
+<li>
+<p><strong>ソースコードを取得する</strong></p>
+<p>「<a href="https://github.com/EkispertWebService/GUI-for-Unity">View on GitHub</a>」でソースコードのページへ遷移し、ダウンロードを行ってください。</p>
+</li>
+</ul>
+
+<ul>
+<li>
+<p><strong>プロジェクトの使い方</strong></p>
+<p>「<a href="https://github.com/EkispertWebService/GUI-for-Unity">View on GitHub</a>」で遷移したページのWikiを参照してください。</p>
 </li>
 </ul>
 
@@ -83,64 +108,12 @@
 </ul>
 
 <h2>
-<a id="ご利用方法" class="anchor" href="#%E3%81%94%E5%88%A9%E7%94%A8%E6%96%B9%E6%B3%95" aria-hidden="true"><span class="octicon octicon-link"></span></a>ご利用方法</h2>
 
-<ul>
-<li><p><strong>プロジェクトを新規作成する場合</strong></p></li>
-</ul>
-
-<ol>
-<li>Unityのプロジェクトを新規作成します</li>
-<li>Assets以下をプロジェクトにコピーします</li>
-<li>Assets/Scenes/EkispertWebService.unityを開きます</li>
-<li>Hierarchyの中から「EkispertWebService」を選択します</li>
-<li>
-<p>Inspector内の「Ekispert Web Service (Script)」のURLとkeyを書き換えます</p>
-
-<table>
-<thead>
-<tr>
-<th>プラン</th>
-<th>URLの値</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>無償版</td>
-<td><a href="http://api.ekispert.com/v1/">http://api.ekispert.com/v1/</a></td>
-</tr>
-<tr>
-<td>有償版(http)</td>
-<td><a href="http://api.ekispert.jp/v1/">http://api.ekispert.jp/v1/</a></td>
-</tr>
-<tr>
-<td>有償版(https)</td>
-<td><a href="https://api.ekispert.jp/v1/">https://api.ekispert.jp/v1/</a></td>
-</tr>
-</tbody>
-</table>
-
-<table>
-<thead>
-<tr>
-<th>keyの値</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>メールに記載の認証キーをセットします</td>
-</tr>
-</tbody>
-</table>
-</li>
-</ol>
-
-<h2>
 <a id="サンプル" class="anchor" href="#%E3%82%B5%E3%83%B3%E3%83%97%E3%83%AB" aria-hidden="true"><span class="octicon octicon-link"></span></a>サンプル</h2>
 
-<p><a href="sample/WebPlayer.html">WebPlayerで開く</a></p>
+<p><a target="_blank" href="sample/ews/WebPlayer.html">WebPlayerで開く</a></p>
 
-<p><a href="sample/WebGL/">WebGLを利用して開く</a>（WebPlayerが利用できないブラウザ向け・スマートフォン/タブレット非推奨）</p>
+<p><a target="_blank" href="sample/ews/WebGL/">WebGLを利用して開く</a>（WebPlayerが利用できないブラウザ向け・スマートフォン/タブレット非推奨）</p>
 
 <h2>
 <a id="ご注意" class="anchor" href="#%E3%81%94%E6%B3%A8%E6%84%8F" aria-hidden="true"><span class="octicon octicon-link"></span></a>ご注意</h2>
@@ -159,6 +132,11 @@
 
 </li>
 </ul>
+
+        <center>
+          <img src="images/webservice_logo_s.png" title="駅すぱあとWebサービス" alt="駅すぱあとWebサービスロゴ">
+        </center>
+
 
 <h2><span>
 株式会社ヴァル研究所
