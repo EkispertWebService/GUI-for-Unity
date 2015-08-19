@@ -7,28 +7,36 @@ using System.IO;
 public class EkispertWebService : MonoBehaviour
 {
     //Webサービスに関する設定
-    public string URL;
-    public string key;
+    public string Url;
+    public string Key;
 
     // 取得した情報のリスト
     public enum dataType
     {
         Corporation,
         Rail,
-        Station
+        Station,
+        CorporationToRail,
+        RailToStation
     }
-    public dataType API;
+    public dataType Api;
+
+    // 交通機関を特定するためのパラメータ
+    public string Type;
+
+    // 都道府県を固定するためのパラメータ
+    public string PrefectureCode;
 
     // 入力した内容を処理する部分
     public string Name;
     private string oldName;
-
+    
     // 結果を格納する部分
-    public string[] resultList;
+    public string[] ResultList;
 
     // フラグ、メッセージなど
-    public string message;
-    public bool isSuccess;
+    public string Message;
+    public bool IsSuccess;
 
     // 負荷軽減のためのタイマー
     private int timer = 0;
@@ -39,8 +47,8 @@ public class EkispertWebService : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        isSuccess = false;
-        message = "";
+        IsSuccess = false;
+        Message = "";
     }
 
     // Update is called once per frame
@@ -51,17 +59,25 @@ public class EkispertWebService : MonoBehaviour
         {
             timer = 120;
             oldName = Name;
-            if (API == dataType.Corporation)
+            if (Api == dataType.Corporation)
             {
-                searchCorporation(Name);
+                SearchCorporation(Name);
             }
-            else if (API == dataType.Rail)
+            else if (Api == dataType.Rail)
             {
-                searchRail(Name);
+                SearchRail(Name);
             }
-            else if (API == dataType.Station)
+            else if (Api == dataType.Station)
             {
-                searchStation(Name);
+                SearchStation(Name);
+            }
+            else if (Api == dataType.CorporationToRail)
+            {
+                SearchCorporationToRail(Name);
+            }
+            else if (Api == dataType.RailToStation)
+            {
+                SearchRailToStation(Name);
             }
         }
         else if (timer > 0)
@@ -70,22 +86,22 @@ public class EkispertWebService : MonoBehaviour
         }
     }
 
-    public void searchCorporation(string inputText)
+    public void SearchCorporation(string inputText)
     {
         // 会社名の取得を押した際の処理
-        API = dataType.Corporation;
-        isSuccess = false;
-        message = "";
+        Api = dataType.Corporation;
+        IsSuccess = false;
+        Message = "";
         oldName = Name = inputText;
         StartCoroutine(getEkispert(inputText, 1));
     }
 
-    public void searchRail(string inputText)
+    public void SearchRail(string inputText)
     {
         // 路線名の取得を押した際の処理
-        API = dataType.Rail;
-        isSuccess = false;
-        message = "";
+        Api = dataType.Rail;
+        IsSuccess = false;
+        Message = "";
         oldName = Name = inputText;
         if (inputText.Length > 0)
         {
@@ -93,17 +109,17 @@ public class EkispertWebService : MonoBehaviour
         }
         else
         {
-            isSuccess = true;
-            message = "1文字以上指定してください。";
+            IsSuccess = true;
+            Message = "1文字以上指定してください。";
         }
     }
 
-    public void searchStation(string inputText)
+    public void SearchCorporationToRail(string inputText)
     {
-        // 駅名の取得を押した際の処理
-        API = dataType.Station;
-        isSuccess = false;
-        message = "";
+        // 会社名から路線名の変換処理
+        Api = dataType.CorporationToRail;
+        IsSuccess = false;
+        Message = "";
         oldName = Name = inputText;
         if (inputText.Length > 0)
         {
@@ -111,8 +127,44 @@ public class EkispertWebService : MonoBehaviour
         }
         else
         {
-            isSuccess = true;
-            message = "1文字以上指定してください。";
+            IsSuccess = true;
+            Message = "1文字以上指定してください。";
+        }
+    }
+
+    public void SearchStation(string inputText)
+    {
+        // 駅名の取得を押した際の処理
+        Api = dataType.Station;
+        IsSuccess = false;
+        Message = "";
+        oldName = Name = inputText;
+        if (inputText.Length > 0)
+        {
+            StartCoroutine(getEkispert(inputText, 1));
+        }
+        else
+        {
+            IsSuccess = true;
+            Message = "1文字以上指定してください。";
+        }
+    }
+
+    public void SearchRailToStation(string inputText)
+    {
+        // 路線名から駅名の変換処理
+        Api = dataType.RailToStation;
+        IsSuccess = false;
+        Message = "";
+        oldName = Name = inputText;
+        if (inputText.Length > 0)
+        {
+            StartCoroutine(getEkispert(inputText, 1));
+        }
+        else
+        {
+            IsSuccess = true;
+            Message = "1文字以上指定してください。";
         }
     }
 
@@ -121,21 +173,41 @@ public class EkispertWebService : MonoBehaviour
     {
         // 検索用URIの作成
         string uri = "";
-        if (API == dataType.Corporation)
+        if (Api == dataType.Corporation)
         {
-            uri = URL + "xml/corporation?key=" + key;
+            uri = Url + "xml/corporation?key=" + Key;
             if (inputText != "")
             {
                 uri += "&name=" + WWW.EscapeURL(inputText);
             }
         }
-        else if (API == dataType.Rail)
+        else if (Api == dataType.CorporationToRail)
         {
-            uri = URL + "xml/rail?key=" + key + "&name=" + WWW.EscapeURL(inputText);
+            uri = Url + "xml/rail?key=" + Key + "&corporationName=" + WWW.EscapeURL(inputText);
         }
-        else if (API == dataType.Station)
+        else if (Api == dataType.Rail)
         {
-            uri = URL + "xml/station?key=" + key + "&name=" + WWW.EscapeURL(inputText);
+            uri = Url + "xml/rail?key=" + Key + "&name=" + WWW.EscapeURL(inputText);
+        }
+        else if (Api == dataType.RailToStation)
+        {
+            uri = Url + "xml/station?key=" + Key + "&railName=" + WWW.EscapeURL(inputText);
+            // 片方向にしか走っていない場合は取得できないため、directionを指定する
+            uri += "&direction=none";
+        }
+        else if (Api == dataType.Station)
+        {
+            uri = Url + "xml/station?key=" + Key + "&name=" + WWW.EscapeURL(inputText);
+        }
+        // 都道府県の指定
+        if (PrefectureCode != "")
+        {
+            uri += "&prefectureCode=" + PrefectureCode;
+        }
+        // 交通種別の指定
+        if (Type != "")
+        {
+            uri += "&type=" + Type;
         }
         if (offset != 1)
         {
@@ -172,7 +244,7 @@ public class EkispertWebService : MonoBehaviour
                 }
             }
 
-            if (API == dataType.Corporation)
+            if (Api == dataType.Corporation)
             {
                 // 会社名が格納されている情報を検索
                 XmlNodeList corporationList = xmlDoc.GetElementsByTagName("Corporation");
@@ -192,7 +264,7 @@ public class EkispertWebService : MonoBehaviour
                     }
                 }
             }
-            else if (API == dataType.Rail)
+            else if (Api == dataType.Rail || Api == dataType.CorporationToRail)
             {
                 // 路線名が格納されている情報を検索
                 XmlNodeList railList = xmlDoc.GetElementsByTagName("Line");
@@ -212,7 +284,7 @@ public class EkispertWebService : MonoBehaviour
                     }
                 }
             }
-            else if (API == dataType.Station)
+            else if (Api == dataType.Station || Api == dataType.RailToStation)
             {
                 // 駅名が格納されている地点情報を検索
                 XmlNodeList pointList = xmlDoc.GetElementsByTagName("Point");
@@ -252,27 +324,26 @@ public class EkispertWebService : MonoBehaviour
             }
 
             // ArrayListを配列に変換してインスペクターで見れるようにする
-            resultList = (string[])resultArray.ToArray(typeof(string));
+            ResultList = (string[])resultArray.ToArray(typeof(string));
 
             // ヒットした情報を確認
-            if (resultList.Length == 0)
+            if (ResultList.Length == 0)
             {
                 // 0件の場合は該当する情報がないのでメッセージを表示する
-                message = "「" + inputText + "」に該当する";
-                if (API == dataType.Corporation)
+                Message = "「" + inputText + "」に該当する";
+                if (Api == dataType.Corporation)
                 {
-                    message += "会社名";
+                    Message += "会社名";
                 }
-                else if (API == dataType.Rail)
+                else if (Api == dataType.Rail || Api == dataType.CorporationToRail)
                 {
-                    message += "路線名";
+                    Message += "路線名";
                 }
-                else if (API == dataType.Station)
+                else if (Api == dataType.Station || Api == dataType.RailToStation)
                 {
-                    message += "駅";
+                    Message += "駅";
                 }
-
-                message += "が見つかりませんでした。";
+                Message += "が見つかりませんでした。";
             }
 
             // maxに届かなかった場合は更に取得する
@@ -283,12 +354,14 @@ public class EkispertWebService : MonoBehaviour
             else
             {
                 // 処理が完了した際にtrueにする
-                isSuccess = true;
+                IsSuccess = true;
+                Message += "取得が完了しました。";
             }
         }
         else
         {
             // Webサービスとの通信に失敗した時の処理
+            Message += "駅すぱあとWebサービスと通信ができませんでした。";
         }
     }
 }

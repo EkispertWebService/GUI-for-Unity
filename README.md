@@ -1,4 +1,4 @@
-# 駅すぱあとWebサービス - GUIソリューション for Unity
+# 駅すぱあとWebサービス for Unity
 
 ## はじめに
 
@@ -14,31 +14,24 @@
 
 ## ご利用方法
 
+ 駅すぱあとWebサービスのURLと認証キーの設定が必要になります。<br>
+ 下記の手順にてURLとキーを設定してください。<br>
+
  * **プロジェクトを新規作成する場合**
 
- 1. Unityのプロジェクトを新規作成します
- 2. Assets以下をプロジェクトにコピーします
- 3. Assets/Scenes/EkispertWebService.unityを開きます
- 4. Hierarchyの中から「EkispertWebService」を選択します
- 5. Inspector内の「Ekispert Web Service (Script)」のURLとkeyを書き換えます
+  1. Unityのプロジェクトを新規作成します
+  2. Assets以下をプロジェクトにコピーします
+  3. Assets/EkispertWebService/Scenes/EkispertWebService.unityを開きます
+  4. Hierarchyの中から「EkispertWebService」を選択します
+  5. Inspector内の「Ekispert Web Service (Script)」のUrlとKeyを書き換えます
 
- * **URLの値**
- 
- * 無償版
+ * **URLの設定内容**
 
- http://api.ekispert.com/v1/
-
- * 有償版(http)
-
- http://api.ekispert.jp/v1/
-
- * 有償版(https)
-
- https://api.ekispert.jp/v1/
-
-* **keyの値**
-
- メールに記載の認証キーをセットします
+ | プラン | URLの値 |
+ | --- | --- |
+ | 無償版 | http://api.ekispert.com/v1/ |
+ | 有償版(http) | http://api.ekispert.jp/v1/ |
+ | 有償版(https) | https://api.ekispert.jp/v1/ |
 
 ## ご注意
 

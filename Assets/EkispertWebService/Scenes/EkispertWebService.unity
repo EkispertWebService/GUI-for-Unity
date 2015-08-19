@@ -322,7 +322,7 @@ GameObject:
   m_PrefabInternal: {fileID: 0}
   serializedVersion: 4
   m_Component:
-  - 224: {fileID: 234819096}
+  - 4: {fileID: 234819096}
   - 114: {fileID: 234819095}
   m_Layer: 5
   m_Name: EkispertWebServiceControl
@@ -345,8 +345,8 @@ MonoBehaviour:
   ews_go: {fileID: 1381001939}
   ewsInput: {fileID: 1340534704}
   ewsListView: {fileID: 1616417879}
---- !u!224 &234819096
-RectTransform:
+--- !u!4 &234819096
+Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -357,11 +357,6 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
-  m_AnchorMin: {x: .5, y: .5}
-  m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: 241, y: 150.5}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: .5, y: .5}
 --- !u!1 &250579246
 GameObject:
   m_ObjectHideFlags: 0
@@ -1148,7 +1143,7 @@ GameObject:
   m_PrefabInternal: {fileID: 0}
   serializedVersion: 4
   m_Component:
-  - 224: {fileID: 1381001941}
+  - 4: {fileID: 1381001941}
   - 114: {fileID: 1381001940}
   m_Layer: 5
   m_Name: EkispertWebService
@@ -1168,15 +1163,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00145c194f9e1824ca478f1cc53385a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  URL: http://api.ekispert.com/v1/
-  key: 
-  API: 0
+  Url: http://api.ekispert.com/v1/
+  Key: 
+  Api: 0
+  Type: train
+  PrefectureCode: 
   Name: 
-  resultList: []
-  message: 
-  isSuccess: 0
---- !u!224 &1381001941
-RectTransform:
+  ResultList: []
+  Message: 
+  IsSuccess: 0
+--- !u!4 &1381001941
+Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -1187,11 +1184,6 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_AnchorMin: {x: .5, y: .5}
-  m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: 241, y: 150.5}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: .5, y: .5}
 --- !u!1 &1477637343
 GameObject:
   m_ObjectHideFlags: 0
@@ -1269,7 +1261,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 250579247}
   m_Direction: 2
   m_Value: 1
-  m_Size: .601612926
+  m_Size: .674193561
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
